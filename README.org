@@ -1,0 +1,7 @@
+* Visual Novels 2 SRS
+
+** Supported Engines
+- Ren’py (WIP)
+
+** Planned support:
+- Anything that GARBro can dump would be a good start.
