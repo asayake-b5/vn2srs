@@ -2,6 +2,14 @@
 
 ** Supported Engines
 - Ren’py (WIP)
+- [[https://www.mediafire.com/file_premium/hji4xcpswswepg9/%E5%89%A3%E3%81%8C%E5%90%9B%E3%80%80kengakimi.apkg/file][剣が君]]
 
 ** Planned support:
 - Anything that GARBro can dump would be a good start.
+- https://forums.fuwanovel.net/topic/17841-script-extraction-thread/
+
+
+** Thanks to
+- https://github.com/uyjulian/zbspac/
+- https://github.com/nyfair/cri2wav
+- https://github.com/kohos/CriTools
