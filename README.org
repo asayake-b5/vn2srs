@@ -1,11 +1,12 @@
 * Visual Novels 2 SRS
 
 ** Supported Engines
+Links to premade decks can be found in the JLABs mediafire repository
 - Ren’py (WIP)
-- [[https://www.mediafire.com/file_premium/hji4xcpswswepg9/%E5%89%A3%E3%81%8C%E5%90%9B%E3%80%80kengakimi.apkg/file][剣が君]]
+- 剣が君
 - neXAs
   - Parfait -second brew-
-  - Baldr Sky Dive1+2 (WIP)
+  - Baldr Sky Dive1+2
   - この青空に約束をー
 
 ** Planned support:

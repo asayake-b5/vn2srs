@@ -111,6 +111,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let s = format!("./{}/{}", voices_folder, line.0);
         let path = Path::new(&s);
         if !path.exists() {
+            println!("{}", path.display());
             println!("noexist",);
             fs::write(path, SILENCE_BYTES).unwrap();
         }

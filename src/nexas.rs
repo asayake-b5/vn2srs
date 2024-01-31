@@ -57,22 +57,38 @@ fn extract_seg_number(text: &str) -> IResult<&str, u64> {
 
 fn parse_voice(text: &str) -> IResult<&str, &str> {
     let (r, _) = many0(preceded(
-        alt((tag("@i"), tag("@m"), tag("@s"), tag("@o"))),
+        alt((
+            tag("@i"),
+            tag("@m"),
+            tag("@f"),
+            tag("@s"),
+            tag("@l"),
+            tag("@o"),
+            tag("@d"),
+        )),
         take_until("@"),
     ))(text)?;
-    let (_, voice) = delimited(
-        tag("@v"),
-        take_while1(|c: char| c.is_alphanumeric()),
-        one_of("@ 「"),
-    )(r)?;
+    let (_, voice) = preceded(tag("@v"), take_while1(|c: char| c.is_alphanumeric()))(r)?;
     Ok((text, voice))
 }
 
 fn parse_text(text: &str) -> IResult<&str, &str> {
-    let (r, _) = alt((take_until("「"), take_until("@m00@f20")))(text)?;
+    let (r, _) = alt((
+        // take_until("「"),
+        // take_until("（"),
+        // take_until("《"),
+        // take_until("『"),
+        // take_until("@m00@f20"),
+        take_while1(|c: char| c.is_ascii_alphanumeric() || c == '@'),
+    ))(text)?;
     let (_, line) = alt((
-        delimited(tag("「"), take_while1(|c: char| c != '」'), tag("」")),
+        delimited(
+            one_of("（《「『"),
+            take_while1(|c: char| c != '》' && c != '」' && c != '）' && c != '』'),
+            one_of("」』）》"),
+        ),
         preceded(tag("@m00@f20"), take_while1(|c: char| c != '\r')),
+        take_while1(|c: char| c != '\r'),
     ))(r)?;
     Ok((text, line))
 }
@@ -116,6 +132,7 @@ pub fn nexas(script_folder: &str) -> HashSet<VoiceLine> {
             let (rest_seg, seg_number) = extract_seg_number(lined).unwrap();
             let not_text = rest_seg.contains("NOT-TEXT");
             (r, lined) = discard_line_ending(r).unwrap();
+            let lined = lined.replace("」@k", "」");
 
             (r, _) = discard_line_ending(r).unwrap();
             (r, _) = discard_line_ending(r).unwrap();
@@ -157,12 +174,15 @@ pub fn nexas(script_folder: &str) -> HashSet<VoiceLine> {
             let (_, text) = parse_text(&line).unwrap();
             let text = text.replace("@n", "");
             let text = text.replace("@k", "");
+            let text = text.replace("@e", "");
+            let text = text.replace("@g－", "―");
 
             let text = regex_ruby.replace_all(&text, "$1[$2]");
             let text = regex_t.replace_all(&text, "");
             let text = regex_s.replace_all(&text, "");
             let text = regex_m.replace_all(&text, "");
             let text = regex_h.replace_all(&text, "");
+            // println!("{text}");
             lines.insert(VoiceLine(
                 format!("{voice}.ogg"),
                 String::from(""),
