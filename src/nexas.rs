@@ -86,7 +86,7 @@ struct Segment {
 
 pub fn nexas(script_folder: &str) -> HashSet<VoiceLine> {
     // let paths = fs::read_dir(script_folder).unwrap();
-    let regex_ruby = Regex::new(r"@r(.*?)@.*?@").unwrap();
+    let regex_ruby = Regex::new(r"@r(.*?)@(.*?)@").unwrap();
     let regex_t = Regex::new(r"@t[0-9]*").unwrap();
     let regex_s = Regex::new(r"@s[0-9]*").unwrap();
     let regex_h = Regex::new(r"@h[0-9a-zA-Z_]*").unwrap();
@@ -158,7 +158,7 @@ pub fn nexas(script_folder: &str) -> HashSet<VoiceLine> {
             let text = text.replace("@n", "");
             let text = text.replace("@k", "");
 
-            let text = regex_ruby.replace_all(&text, "$1");
+            let text = regex_ruby.replace_all(&text, "$1[$2]");
             let text = regex_t.replace_all(&text, "");
             let text = regex_s.replace_all(&text, "");
             let text = regex_m.replace_all(&text, "");
