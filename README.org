@@ -3,13 +3,21 @@
 ** Supported Engines
 - Ren’py (WIP)
 - [[https://www.mediafire.com/file_premium/hji4xcpswswepg9/%E5%89%A3%E3%81%8C%E5%90%9B%E3%80%80kengakimi.apkg/file][剣が君]]
+- neXAs
+  - Parfait -second brew-
+  - Baldr Sky Dive1+2 (WIP)
+  - この青空に約束をー
 
 ** Planned support:
 - Anything that GARBro can dump would be a good start.
 - https://forums.fuwanovel.net/topic/17841-script-extraction-thread/
 
+** Installing/Using
+No binaries will be provided, you /will/ need to edit the code one way or another to fit games even within an already supported engine.
+You will also need to massage the script files a little for some rare oddities that aren't worth adding to the parser.
+Issues are however open for requests.
 
-** Thanks to
+** Special Thanks
 - https://github.com/uyjulian/zbspac/
 - https://github.com/nyfair/cri2wav
 - https://github.com/kohos/CriTools

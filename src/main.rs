@@ -11,12 +11,15 @@ use clap::Subcommand;
 use genanki_rs::{Deck, Field, Model, Note, Package, Template};
 use kengakimi::ken_ga_kimi;
 
+pub mod common;
 pub mod kengakimi;
+pub mod nexas;
 pub mod renpy;
 
 const SILENCE_BYTES: &[u8] = include_bytes!("../silence.mp3");
 
 #[derive(Debug, Eq, Hash, PartialEq)]
+/// Voice File, Speaker, Line
 pub struct VoiceLine(String, String, String);
 
 pub fn anki_sentence(speaker: &str, line: &str) -> String {
@@ -26,6 +29,7 @@ pub fn anki_sentence(speaker: &str, line: &str) -> String {
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
+    /// Visual novel to parse
     #[command(subcommand)]
     command: Commands,
 }
@@ -38,6 +42,17 @@ enum Commands {
         script_folder: String,
         ///Folder containing the mp3 voice files
         voices_folder: String,
+    },
+    /// NeXAs engine games (GIGA notably)
+    Nexas {
+        ///Folder containing the extracted script files (a/script.txt b/script.txt etc etc)
+        script_folder: String,
+        ///Folder containing the voic files (*.ogg)
+        voices_folder: String,
+        ///Game Name (eg "Baldr Sky")
+        game_name: String,
+        ///Output deck (eg "baldrsky.apkg")
+        output_file: String,
     },
 }
 fn main() -> Result<(), Box<dyn Error>> {
@@ -52,6 +67,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             script_folder,
             voices_folder,
             ken_ga_kimi(script_folder),
+        ),
+        Commands::Nexas {
+            script_folder,
+            voices_folder,
+            game_name,
+            output_file,
+        } => (
+            game_name.as_str(),
+            output_file.as_str(),
+            script_folder,
+            voices_folder,
+            nexas::nexas(script_folder),
         ),
     };
 
