@@ -2,7 +2,7 @@ use std::{
     collections::HashSet,
     error::Error,
     fs::{self},
-    path::Path,
+    path::{Path, PathBuf},
     time::{SystemTime, UNIX_EPOCH},
 };
 
@@ -12,6 +12,7 @@ use genanki_rs::{Deck, Field, Model, Note, Package, Template};
 use kengakimi::ken_ga_kimi;
 
 pub mod common;
+pub mod ffxiv;
 pub mod kengakimi;
 pub mod nexas;
 pub mod renpy;
@@ -47,12 +48,20 @@ enum Commands {
     Nexas {
         ///Folder containing the extracted script files (a/script.txt b/script.txt etc etc)
         script_folder: String,
-        ///Folder containing the voic files (*.ogg)
+        ///Folder containing the voice files (*.ogg)
         voices_folder: String,
         ///Game Name (eg "Baldr Sky")
         game_name: String,
         ///Output deck (eg "baldrsky.apkg")
         output_file: String,
+    },
+    /// That game which might or might not have won awards and have a free trial spanning 2 extensions
+    FFXIV {
+        ///Folder containing the extracted script files (exd/cut_scene/.. etc etc)
+        script_folder: String,
+        ///Folder containing the cutscene files ({ffxiv,ex1,ex2..}/sound/voicem...)
+        voices_folder: String,
+        xpac: ffxiv::Version,
     },
 }
 fn main() -> Result<(), Box<dyn Error>> {
@@ -79,6 +88,17 @@ fn main() -> Result<(), Box<dyn Error>> {
             script_folder,
             voices_folder,
             nexas::nexas(script_folder),
+        ),
+        Commands::FFXIV {
+            script_folder,
+            voices_folder,
+            xpac,
+        } => (
+            xpac.to_deck_name(),
+            xpac.to_file_name(),
+            script_folder,
+            voices_folder,
+            ffxiv::ffxiv(script_folder, voices_folder, xpac.clone()),
         ),
     };
 
@@ -110,7 +130,14 @@ fn main() -> Result<(), Box<dyn Error>> {
             continue;
         }
         let original = format!("./{}/{}", voices_folder, line.0);
-        let copy = format!("./{}/{}_{}", voices_folder, prefix, line.0);
+        let p_copy = PathBuf::from(&line.0);
+        let filename = p_copy.file_name().unwrap();
+        let copy = format!(
+            "./{}/{}_{}",
+            voices_folder,
+            prefix,
+            filename.to_str().unwrap()
+        );
         let in_path = Path::new(&original);
         let out_path = Path::new(&copy);
         if !in_path.exists() {
@@ -124,7 +151,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             Note::new(
                 model.clone(),
                 vec![
-                    &format!("[sound:{}_{}]", prefix, line.0,),
+                    &format!("[sound:{}_{}]", prefix, filename.to_str().unwrap(),),
                     "",
                     &anki_sentence(&line.1, &line.2),
                     &line.2,

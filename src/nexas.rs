@@ -1,27 +1,18 @@
-use std::{
-    collections::HashSet,
-    fs::{self, File},
-    io::BufReader,
-    path::{Path, PathBuf},
-};
+use std::{collections::HashSet, fs::File, io::BufReader};
 
-use glob::glob_with;
 use nom::{
     branch::alt,
     bytes::complete::{tag, take_while1},
-    bytes::complete::{take, take_till, take_until},
-    character::{
-        complete::{line_ending, multispace0, not_line_ending, one_of},
-        is_alphanumeric,
-    },
-    multi::{many0, many0_count, many1},
-    sequence::{delimited, preceded, terminated},
+    bytes::complete::{take, take_until},
+    character::complete::one_of,
+    multi::many0,
+    sequence::{delimited, preceded},
     IResult,
 };
 use regex::Regex;
 
 use crate::{
-    common::{discard_line_ending, number_around_spaces, p_decimal, ws},
+    common::{discard_line_ending, number_around_spaces},
     VoiceLine,
 };
 
@@ -95,7 +86,7 @@ fn parse_text(text: &str) -> IResult<&str, &str> {
 
 #[derive(Debug)]
 struct Segment {
-    n: u64,
+    _n: u64,
     contents: String,
     not_text: bool,
 }
@@ -138,7 +129,7 @@ pub fn nexas(script_folder: &str) -> HashSet<VoiceLine> {
             (r, _) = discard_line_ending(r).unwrap();
             (r, _) = discard_line_ending(r).unwrap();
             segments.push(Segment {
-                n: seg_number,
+                _n: seg_number,
                 contents: lined.to_string(),
                 not_text,
             });
