@@ -14,6 +14,7 @@ use kengakimi::ken_ga_kimi;
 pub mod common;
 pub mod ffxiv;
 pub mod kengakimi;
+pub mod kirikiri;
 pub mod nexas;
 pub mod renpy;
 
@@ -55,6 +56,12 @@ enum Commands {
         ///Output deck (eg "baldrsky.apkg")
         output_file: String,
     },
+    KiriKiri {
+        script_folder: String,
+        voices_folder: String,
+        game_name: String,
+        output_file: String,
+    },
     /// That game which might or might not have won awards and have a free trial spanning 2 extensions
     FFXIV {
         ///Folder containing the extracted script files (exd/cut_scene/.. etc etc)
@@ -88,6 +95,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             script_folder,
             voices_folder,
             nexas::nexas(script_folder),
+        ),
+        Commands::KiriKiri {
+            script_folder,
+            voices_folder,
+            game_name,
+            output_file,
+        } => (
+            game_name.as_str(),
+            output_file.as_str(),
+            script_folder,
+            voices_folder,
+            kirikiri::kirikiri(script_folder),
         ),
         Commands::FFXIV {
             script_folder,

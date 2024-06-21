@@ -3,6 +3,9 @@
 ** Supported Engines
 Links to premade decks can be found in the JLABs mediafire repository
 - Ren’py (WIP)
+- FFXIV
+- KiriKiri
+  - Monkeys!¡
 - 剣が君
 - neXAs
   - Parfait -second brew-
