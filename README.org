@@ -1,7 +1,6 @@
 * Visual Novels 2 SRS
 
 ** Supported Engines
-Links to premade decks can be found in the JLABs mediafire repository
 - Ren’py (WIP)
 - FFXIV
 - KiriKiri
